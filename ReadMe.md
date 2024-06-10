@@ -52,6 +52,6 @@ gzip ${Sample_name}_ST/GeneFull/raw/*
 rm ${Sample_name}_Aligned.out.sam
 ```
 
-##Usage and Documentatation
+## Usage and Documentatation
 
 
