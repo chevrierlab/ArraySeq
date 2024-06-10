@@ -15,7 +15,7 @@ The Array-seq cature area size, makes it well-suited for multiple replicates, an
 
 ## Pre-processing
 
-Following the generation of fastq files, we recommend using STARSolo (>=2.7.8a) for denulteplexing spatial barcodes and counting UMIs. The barcode.txt file can be downloaded from the **Insert folder here** folder. Other barcode files from custom-made array designs can be used in its place. Below is an example script:
+After generating fastq files, we recommend using STARSolo (>=2.7.8a) for denulteplexing spatial barcodes and counting UMIs. The barcode.txt file can be downloaded from the **Insert folder here** folder. Other barcode files from custom-made array designs can be used in its place. Below is an example script:
 
 ```bash
 export PATH=<Path to STAR (>=2.7.8a) static build folder>:$PATH
