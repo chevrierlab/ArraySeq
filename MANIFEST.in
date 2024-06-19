@@ -1,1 +1,1 @@
-include arrayseq/_data/*csv.gz
+include arrayseq/preprocess/_data/Barcodes/ArraySeq_n12_mapping.csv.gz
