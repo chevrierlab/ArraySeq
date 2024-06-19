@@ -34,7 +34,7 @@ def map_barcodes(adata, Barcode_coord_file=None):
     adata_x = adata.copy()
 
     if Barcode_coord_file is None:
-        Barcode_coord_file = pkg_resources.resource_filename('arrayseq', '../_data/ArraySeq_n12_mapping.csv.gz')
+        Barcode_coord_file = pkg_resources.resource_filename('arrayseq', './_data/Barcodes/ArraySeq_n12_mapping.csv.gz')
 
     with gzip.open(Barcode_coord_file, 'rt') as f:
         coords = pd.read_csv(f)
