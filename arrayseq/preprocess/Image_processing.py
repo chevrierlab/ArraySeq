@@ -127,7 +127,7 @@ def preprocess_histology_image(
 
 
 
-def Detect_Tissue(image, 
+def detect_tissue(image, 
                 sigma = 1, 
                 manual_threshold_intensity = None, 
                 object_connectivity = 2,
@@ -186,14 +186,8 @@ def Detect_Tissue(image,
 
     Example
     -------
-    >>> tissue_mask, labeled_tissues = Detect_Tissue(
-    >>>     image=my_histology_image,
-    >>>     sigma=1.5,
-    >>>     manual_threshold_intensity=0.8,
-    >>>     object_connectivity=1,
-    >>>     min_tissue_size=0.002,
-    >>>     min_hole_size=0.0001,
-    >>>     show_plots=True,
+    >>> tissue_mask, labeled_tissues = detect_tissue(
+    >>>     image=HE_image,
     >>>     label_multiple_tissues=True
     >>> )
     """
