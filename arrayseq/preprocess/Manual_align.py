@@ -139,7 +139,7 @@ def maunal_align(adata,
     ST_y : float
         Y-coordinate of the center of the ST array.
     path_to_barcode_positions : str
-        Path to the CSV file containing the original barcode positions.
+        Path to the CSV file containing barcodes and coordinates.
 
     Returns
     -------
