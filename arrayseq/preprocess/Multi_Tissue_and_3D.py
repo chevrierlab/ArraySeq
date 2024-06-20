@@ -1,4 +1,3 @@
-
 import warnings
 import pandas as pd
 from skimage.color import rgb2gray
@@ -83,7 +82,7 @@ def seperate_tissues(adata,
                      preview_images_alpha = 0.5, 
                      preview_HE_images = True): 
 
-     """
+    """
     Separate tissues in an AnnData object based on a specified column, crop the corresponding histological image, and optionally remove background tissue.
 
     Parameters
@@ -221,7 +220,7 @@ def seperate_tissues(adata,
         adata_X_sub.write(os.path.join(adata_output_folder, f"{sample_name}_{ID}.h5ad"))
 
         if preview_alignment == True:
-            axs[idx].imshow(color.rgb2gray(HE_image_cropped), cmap='gray')
+            axs[idx].imshow(rgb2gray(HE_image_cropped), cmap='gray')
             axs[idx].scatter(adata_X_sub_meta["X"], adata_X_sub_meta["Y"], c="r", s=preview_images_pt_size, alpha=preview_images_alpha)
             axs[idx].set_title(f'{seperate_column}={ID}')
     
@@ -312,7 +311,7 @@ def align_3D(input_path,
             pt_size = 1, 
             plot_size = 10):
     
-     """
+    """
     Aligns a series of 3D histological images and their corresponding AnnData objects. The function reads the images, aligns them based on tissue overlap, and saves the aligned images and AnnData objects.
 
     Parameters
