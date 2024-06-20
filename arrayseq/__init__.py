@@ -1,5 +1,9 @@
+import warnings
+warnings.filterwarnings('ignore')
 
-# __init__.py for arrayseq main package
-from .tools import *
-from .preprocess import *
-from .plotting import *
+from . import preprocess as pp
+from . import tools as tl
+from . import plotting as pl
+
+import sys
+sys.modules.update({f'{__name__}.{m}': globals()[m] for m in ['pp','tl','pl']})
