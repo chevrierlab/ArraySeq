@@ -1,11 +1,12 @@
-
 import plotly.graph_objs as go
 import matplotlib.cm as cm
-from matplotlib.colors import to_rgb
+from matplotlib.colors import to_rgb, LinearSegmentedColormap, Normalize, to_rgba
 import numpy as np
 import pandas as pd
 import plotly.io as pio
 import random
+from matplotlib.cm import ScalarMappable
+
 
 def generate_custom_cmap(num_colors):
     """ Generate a custom colormap with `num_colors` distinct colors. """
@@ -368,7 +369,7 @@ def plot_gene_3d(adata, gene, point_size=2, cmap='viridis', cmap_dynamic_alpha_c
 
         # Create a colormap for alpha blending from white to the chosen color
         cmap_custom = LinearSegmentedColormap.from_list('custom_alpha', [(1, 1, 1, 0), rgba_color])
-        sm = ScalarMappable(cmap=cmap_custom, norm=plt.Normalize(0, 1))
+        sm = ScalarMappable(cmap=cmap_custom, norm=Normalize(0, 1))
         sm.set_array([])
         fig.update_layout(coloraxis=dict(
             colorscale=[[0, 'rgba(255, 255, 255, 0)'], [1, f'rgba({int(rgba_color[0]*255)}, {int(rgba_color[1]*255)}, {int(rgba_color[2]*255)}, {rgba_color[3]})']],
