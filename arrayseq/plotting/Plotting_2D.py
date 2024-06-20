@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap, Normalize
+from matplotlib.colors import LinearSegmentedColormap, Normalize, NoNorm
 from skimage import exposure
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import to_rgba
@@ -39,7 +39,7 @@ def plot_meta(adata,
               colorbar_pad=0.01, 
               legend_point_size=10,
               user_cmap=None):
-     """
+    """
     Enhanced plot function to display metadata over an image with options for customization, including user-defined color maps.
 
     Parameters
@@ -162,7 +162,7 @@ def plot_meta(adata,
     # Setup the plot
     fig, ax = plt.subplots(figsize=(plot_height * 1.5, plot_height))
     ax.imshow(image, cmap='gray' if bw else None, aspect='equal')
-    scatter = ax.scatter(x_coords, y_coords, c=color_data, s=point_size, cmap=cmap, alpha=point_alpha, norm=norm if norm else matplotlib.colors.NoNorm())
+    scatter = ax.scatter(x_coords, y_coords, c=color_data, s=point_size, cmap=cmap, alpha=point_alpha, norm=norm if norm else NoNorm())
 
     # Create a legend for categorical data
     if not user_cmap and categories:
@@ -361,7 +361,7 @@ def plot_multi_gene(adata, genes, image_key='Image', point_size=5, bw=False, ima
                     title_text=None, label_font_size=12, title_font_size=14, font_weight='normal',
                     colorbar_spacing=0.1, legend_font_size=12, legend_title_font_size=12, 
                     colorbar_tick_font_size=10, colorbar_pad=0.1):
-   """
+    """
     Function to display gene expression over an image from an AnnData object with RGB color mapping for 2 or 3 genes,
     including customizable legend and color bar features.
 
@@ -500,4 +500,5 @@ def plot_multi_gene(adata, genes, image_key='Image', point_size=5, bw=False, ima
 
     # Show the plot
     plt.show()
+
 
