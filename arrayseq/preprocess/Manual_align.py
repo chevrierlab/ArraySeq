@@ -103,7 +103,7 @@ def generate_manual_ST_image(adata,
 
 
 
-def maunal_align_data(adata, 
+def maunal_align(adata, 
                     height_HE, 
                     width_HE, 
                     height_ST,
@@ -112,7 +112,7 @@ def maunal_align_data(adata,
                     HE_y, 
                     ST_x, 
                     ST_y, 
-                    path_to_barcode_positions):
+                    path_to_barcode_positions = None):
     """
     Manually align spatial transcriptomics (ST) data to histology image coordinates.
 
@@ -153,8 +153,8 @@ def maunal_align_data(adata,
 
     Example
     -------
-    >>> adata_aligned = manual_align_data(
-    >>>     adata=adata,
+    >>> adata_aligned = maunal_align(
+    >>>     adata,
     >>>     height_HE=5000,
     >>>     width_HE=4000,
     >>>     height_ST=6000,
@@ -162,13 +162,12 @@ def maunal_align_data(adata,
     >>>     HE_x=2500,
     >>>     HE_y=2000,
     >>>     ST_x=3000,
-    >>>     ST_y=3500,
-    >>>     path_to_barcode_positions="path/to/barcode_positions.csv"
+    >>>     ST_y=3500
     >>> )
     """
     
     adata_x = adata.copy()
-    adata_x = map_barcodes(adata_x)
+    adata_x = map_barcodes(adata_x, path_to_barcode_positions)
     
     HE_position_x = round(HE_x - (width_HE/2))
     HE_position_y = round(HE_y - (height_HE/2))
