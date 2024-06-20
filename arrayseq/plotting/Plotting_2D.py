@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap, Normalize, NoNorm
+from matplotlib.colors import LinearSegmentedColormap, Normalize, NoNorm, to_rgba
 from skimage import exposure
 from matplotlib.cm import ScalarMappable
-from matplotlib.colors import to_rgba
 
 
 def generate_custom_cmap(num_colors):
