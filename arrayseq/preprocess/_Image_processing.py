@@ -95,7 +95,8 @@ def preprocess_histology_image(
     grayscale = image if image.ndim == 2 else skimage.color.rgb2gray(image)
 
     thresh = skimage.filters.threshold_otsu(grayscale)
-    #include a check to make sure it falls within limits here and for the H&E image:
+        
+    #TODO: include a check to make sure it falls within limits here and for the H&E image:
     rescaled_grayscale = skimage.exposure.rescale_intensity(grayscale, in_range=(0, thresh*intensity_rescale_factor))
 
 
@@ -104,13 +105,11 @@ def preprocess_histology_image(
     for i in range(3):
         rescaled_rgb[:,:,i] = skimage.exposure.rescale_intensity(image[:,:,i], in_range=(0, max_intensity*thresh*intensity_rescale_factor))
 
-    #add a try except statement here:
-    
-    if not os.path.exists(output_folder_path):
-        os.makedirs(output_folder_path)
         
         
     if save_images:
+        if not os.path.exists(output_folder_path):
+            os.makedirs(output_folder_path)
         io.imsave(fname = os.path.join(output_folder_path, f"{sample_name}_HE.png"), arr=rescaled_rgb)
         io.imsave(fname = os.path.join(output_folder_path, f"{sample_name}_BW.png"), arr=skimage.img_as_ubyte(rescaled_grayscale))
 
