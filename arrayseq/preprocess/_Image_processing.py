@@ -84,6 +84,8 @@ def preprocess_histology_image(
     >>>     output_folder_path='path/to/output'
     >>> )
     """
+
+    #TODO: Add option for not touching the image
         
     if None in (sample_name, output_folder_path) and save_images:
         raise ValueError("Both 'sample_name' and 'output_folder_path' are required when 'save_images' is True.")
