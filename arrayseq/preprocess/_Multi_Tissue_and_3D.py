@@ -144,7 +144,7 @@ def seperate_tissues(adata,
     adata_X = adata.copy()
     image = adata_X.uns['Image']
 
-    unique_ids = adata_X.obs.sort_values(seperate_column)[seperate_column].unique()
+    unique_ids = adata_X.obs.sort_values(seperate_column)[seperate_column].unique(dropna=True)
     
     if preview_HE_images == True:
         HE_images = []
