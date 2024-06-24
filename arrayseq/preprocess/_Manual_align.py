@@ -104,15 +104,19 @@ def generate_manual_ST_image(adata,
 
 
 def maunal_align(adata, 
-                    height_HE, 
-                    width_HE, 
-                    height_ST,
-                    width_ST, 
-                    HE_x, 
-                    HE_y, 
-                    ST_x, 
-                    ST_y, 
-                    path_to_barcode_positions = None):
+                 HE_image, 
+                 height_ST,
+                 width_ST, 
+                 HE_x, 
+                 HE_y, 
+                 ST_x, 
+                 ST_y, 
+                 path_to_barcode_positions = None, 
+                 show_image = True, 
+                 image_size = 6, 
+                 point_color = "#3897f5", 
+                 point_alpha = 0.8, 
+                 point_size = 2):
     """
     Manually align spatial transcriptomics (ST) data to histology image coordinates.
 
@@ -168,6 +172,9 @@ def maunal_align(adata,
     
     adata_x = adata.copy()
     adata_x = map_barcodes(adata_x, path_to_barcode_positions)
+
+    height_HE = HE_image.shape[0]
+    width_HE = HE_image.shape[1]
     
     HE_position_x = round(HE_x - (width_HE/2))
     HE_position_y = round(HE_y - (height_HE/2))
@@ -181,6 +188,20 @@ def maunal_align(adata,
     coords["X"] = coords["X"].multiply(width_ST/coords["X"].max()).add(ST_shift_x)
     coords["Y"] = coords["Y"].multiply(height_ST/coords["Y"].max()).add(ST_shift_y)
     adata_x.obs = adata_x.obs.join(coords.set_index("Barcode"))
+
+
+    if show_image == True:
+        fig, ax = plt.subplots(figsize=(image_size * 1.5, image_size))
+        ax.imshow(rgb2gray(HE_image), cmap='gray')
+        scatter = ax.scatter(adata_x.obs["X"].tolist(), 
+                             adata_x.obs["Y"].tolist(), 
+                             c=point_color, 
+                             s=point_size, 
+                             alpha=point_alpha)
+        
+        ax.set_title("Aligned ST")
+        plt.show()
+
     
     return adata_x
 
