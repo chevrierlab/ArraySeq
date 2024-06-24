@@ -1,6 +1,7 @@
 import warnings
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 import skimage 
 import os
 from skimage import io, measure, color
@@ -135,6 +136,7 @@ def detect_tissue(image,
                 min_tissue_size = 0.001,
                 min_hole_size = 0.00005,
                 show_plots = True, 
+                plot_size = 15,
                 label_multiple_tissues = False):
     
     """
@@ -248,51 +250,52 @@ def detect_tissue(image,
         regions = measure.regionprops(labeled_image)
 
     
-    if show_plots == True:
-        fig = plt.figure()
+    if show_plots:
+        fig = plt.figure(figsize=(plot_size, plot_size))  # Adjust the figure size as needed
 
-        fig.add_subplot(1,4,1)
-        plt.imshow(grayscale_image, cmap = "gray")
-        plt.title("H&E \n Grayscale", fontsize=10)
-        plt.axis('off')
+        # Create a grid with 4 columns, with the last column being wider
+        if label_multiple_tissues:
+            gs = GridSpec(1, 4, width_ratios=[1, 1, 1, 1.5])
+        else: 
+            gs = GridSpec(1, 3, width_ratios=[1, 1, 1])
 
-        fig.add_subplot(1,4,2)
-        plt.imshow(holes_filled)
-        plt.title("Detected Tissue \n(Filled in)", fontsize=10)
-        plt.axis('off')           
+        ax1 = fig.add_subplot(gs[0])
+        ax1.imshow(grayscale_image, cmap="gray")
+        ax1.set_title("H&E \n Grayscale", fontsize=10)
+        ax1.axis('off')
 
-        fig.add_subplot(1,4,3)
-        plt.imshow(tissue_holes_removed)
-        plt.title("Detected Tissue \n(Holes Removed)", fontsize=10)
-        plt.axis('off')
-        
-        
-        if label_multiple_tissues == True: 
-        
-            fig.add_subplot(1,4,4)
-            plt.imshow(labeled_image)
-            plt.imshow(labeled_image, cmap='nipy_spectral')  # Using a spectral colormap to distinguish labels
+        ax2 = fig.add_subplot(gs[1])
+        ax2.imshow(holes_filled)
+        ax2.set_title("Detected Tissue \n(Filled in)", fontsize=10)
+        ax2.axis('off')
 
-            # Annotate each region with its label
+        ax3 = fig.add_subplot(gs[2])
+        ax3.imshow(tissue_holes_removed)
+        ax3.set_title("Detected Tissue \n(Holes Removed)", fontsize=10)
+        ax3.axis('off')
+
+        if label_multiple_tissues:
+            ax4 = fig.add_subplot(gs[3])
+            ax4.imshow(labeled_image, cmap='nipy_spectral')
             for region in regions:
-                # Get the coordinates of the centroid
                 y, x = region.centroid
+                ax4.annotate(str(region.label), (x, y), color='white', weight='bold', fontsize=15, ha='center')
+            plt.colorbar(ax=ax4, orientation='vertical')
+            ax4.set_title("Tissues Labeled", fontsize=10)
+            ax4.axis('off')
 
-                # Use matplotlib to annotate the centroid of each region
-                plt.annotate(str(region.label), (x, y), color='white', weight='bold', fontsize=15, ha='center')
-
-            plt.colorbar()  # Optionally add a colorbar
-            plt.axis('off')  # Turn off the axis
-            plt.title("Tissues Labeled", fontsize=10)
+            plt.tight_layout()
             plt.show()
 
-
-            plt.tight_layout()
-
             return tissue_holes_removed, labeled_image
-        else: 
+        else:
             plt.tight_layout()
+            plt.show()
 
             return tissue_holes_removed
+    else:
+        if label_multiple_tissues:
+            return tissue_holes_removed, labeled_image
+        else:
+            return tissue_holes_removed
 
-        
