@@ -99,9 +99,10 @@ def preprocess_histology_image(
 
     thresh = skimage.filters.threshold_otsu(grayscale)
         
-    #TODO: include a check to make sure it falls within limits here and for the H&E image:
+    if thresh*intensity_rescale_factor > 0.999:
+        raise ValueError("Threshold intensity for tissue detection exceeds limit. Lower 'intensity_rescale_factor'.")
+    
     rescaled_grayscale = skimage.exposure.rescale_intensity(grayscale, in_range=(0, thresh*intensity_rescale_factor))
-
 
     max_intensity = image.max()
     rescaled_rgb = np.zeros_like(image)
