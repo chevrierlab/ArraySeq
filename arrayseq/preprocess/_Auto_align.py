@@ -104,7 +104,12 @@ def aulto_align(
     initial_tx=0,
     initial_ty=0,
     initial_scale=1,
-    bounds=([-5000, -10000, 1], [750, 1000, 6])
+    bounds=([-5000, -10000, 1], [750, 1000, 6]), 
+    show_image = True, 
+    image_size = 6, 
+    point_color = "#3897f5", 
+    point_alpha = 0.8, 
+    point_size = 2
 ):
     
     """
@@ -201,5 +206,18 @@ def aulto_align(
     transformed_all_points = transform_points(all_points, optimized_tx, optimized_ty, optimized_scale)
     adata_copy.obs["X"] = transformed_all_points[:, 0]
     adata_copy.obs["Y"] = transformed_all_points[:, 1]
+
+    if show_image == True:
+        fig, ax = plt.subplots(figsize=(image_size * 1.5, image_size))
+        ax.imshow(rgb2gray(HE_image), cmap='gray')
+        scatter = ax.scatter(adata_copy.obs["X"].tolist(), 
+                             adata_copy.obs["Y"].tolist(), 
+                             c=point_color, 
+                             s=point_size, 
+                             alpha=point_alpha)
+        
+        ax.set_title("Aligned ST")
+        plt.show()
+
 
     return adata_copy
