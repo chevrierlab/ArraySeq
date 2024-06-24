@@ -168,6 +168,8 @@ def create_arrayseq(adata,
     del adata_x.obs["Cavity"]
     
     adata_x.uns["Signature"] = "Full ArraySeq Object"
+    scanpy_coords = adata_x.obs[["X", "Y"]].to_numpy()
+    adata_x.obsm["spatial"] = scanpy_coords
     
     return adata_x
 
@@ -323,6 +325,9 @@ def mirror_image_and_coordinates(adata, axis='x'):
         raise ValueError("Invalid axis specified. Use 'x' or 'y'.")
     
     adata_X.uns['Image'] = mirrored_image
+                     
+    scanpy_coords = adata_X.obs[["X", "Y"]].to_numpy()
+    adata_X.obsm["spatial"] = scanpy_coords
 
     return adata_X
 
@@ -393,6 +398,9 @@ def rotate_image_and_coordinates(adata, angle=90):
         adata_X.obs['X'], adata_X.obs['Y'] = max_x_image - adata_X.obs['Y'], adata_X.obs['X']
 
     adata_X.uns['Image'] = rotated_image
+
+    scanpy_coords = adata_X.obs[["X", "Y"]].to_numpy()
+    adata_X.obsm["spatial"] = scanpy_coords
     
     return adata_X
 
