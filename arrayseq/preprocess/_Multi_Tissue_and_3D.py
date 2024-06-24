@@ -79,6 +79,7 @@ def seperate_tissues(adata,
                      tissue_connectivity = 2,
                      preview_alignment = True, 
                      preview_images_pt_size = 1, 
+                     preview_images_color = "#d91c35",
                      preview_images_alpha = 0.5, 
                      preview_HE_images = True): 
 
@@ -140,7 +141,7 @@ def seperate_tissues(adata,
     -------
     >>> seperate_tissues(adata=my_adata, seperate_column='Tissue_ID')
     """
-        
+      
     adata_X = adata.copy()
     image = adata_X.uns['Image']
 
@@ -223,7 +224,12 @@ def seperate_tissues(adata,
 
         if preview_alignment == True:
             axs[idx].imshow(rgb2gray(HE_image_cropped), cmap='gray')
-            axs[idx].scatter(adata_X_sub_meta["X"], adata_X_sub_meta["Y"], c="r", s=preview_images_pt_size, alpha=preview_images_alpha)
+            axs[idx].scatter(adata_X_sub_meta["X"], 
+                             adata_X_sub_meta["Y"], 
+                             c=preview_images_color, 
+                             s=preview_images_pt_size, 
+                             alpha=preview_images_alpha)
+          
             axs[idx].set_title(f'{seperate_column}={ID}')
     
     if preview_alignment == True:
