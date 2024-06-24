@@ -210,6 +210,8 @@ def seperate_tissues(adata,
 
         adata_X_sub.obs = adata_X_sub_meta
         adata_X_sub.uns['Image'] = HE_image_cropped
+        scanpy_coords = adata_X_sub.obs[["X", "Y"]].to_numpy()
+        adata_X_sub.obsm["spatial"] = scanpy_coords
         
         if preview_HE_images == True:
             HE_images = HE_images + [HE_image_cropped]
@@ -255,13 +257,6 @@ def seperate_tissues(adata,
             
         plt.tight_layout()
         plt.show()
-
-        
-        
-        
-        
- 
-
 
 
 
@@ -546,6 +541,9 @@ def align_3D(input_path,
             
             adata_X_i.obs["X"] = adata_X_i.obs["X"] + pad_left
             adata_X_i.obs["Y"] = adata_X_i.obs["Y"] + pad_top
+          
+            scanpy_coords = adata_X_i.obs[["X", "Y"]].to_numpy()
+            adata_X_i.obsm["spatial"] = scanpy_coords
             
 
             adata_X_full = adata_X_full.concatenate(adata_X_i)
