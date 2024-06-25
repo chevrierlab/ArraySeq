@@ -1,4 +1,5 @@
 import gzip
+import tdqm
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -69,16 +70,25 @@ def downsample_HE(data, n_points_removed):
     return downsampled_data
 
 # Residuals function to compute the difference between transformed points and the closest mask points
-def residuals(params, points, mask_points):
+def residuals_with_progress(params, points, mask_points, progress_bar):
     tx, ty, scale = params
     transformed_points = transform_points(points, tx, ty, scale)
     distances = cdist(transformed_points, mask_points)
+    progress_bar.update(1)
     return np.min(distances, axis=0)
 
 # Function to detect and remove outliers
 def remove_outliers(data_points, mask_points, threshold=0):
     initial_params = [0, 0, 1]
-    result = least_squares(residuals, initial_params, args=(data_points, mask_points))
+    n_iterations = 500  # Number of iterations for the progress bar
+
+    with tqdm(total=n_iterations) as pbar:
+        result = least_squares(
+            residuals_with_progress,
+            initial_params,
+            args=(data_points, mask_points, pbar),
+            max_nfev=n_iterations
+        )
     optimized_tx, optimized_ty, optimized_scale = result.x
     transformed_points = transform_points(data_points, optimized_tx, optimized_ty, optimized_scale)
     distances = cdist(transformed_points, mask_points)
@@ -89,6 +99,28 @@ def remove_outliers(data_points, mask_points, threshold=0):
     outliers = squared_distances > (mean_distance + threshold * std_distance)
     filtered_data_points = data_points[~outliers]
     return filtered_data_points, sum(outliers)
+
+def residuals_final_with_progress(params, points, mask_points, progress_bar):
+    tx, ty, scale = params
+    transformed_points = transform_points(points, tx, ty, scale)
+    distances = cdist(transformed_points, mask_points)
+    progress_bar.update(1)
+    return np.min(distances, axis=0)
+
+def final_alignment_with_progress(filtered_downsample_spatial, detected_HE, initial_params, bounds):
+    n_iterations = 500  # Number of iterations for the progress bar
+
+    with tqdm(total=n_iterations) as pbar:
+        result = least_squares(
+            residuals_final_with_progress,
+            initial_params,
+            args=(filtered_downsample_spatial, detected_HE, pbar),
+            bounds=bounds,
+            max_nfev=n_iterations
+        )
+
+    optimized_tx, optimized_ty, optimized_scale = result.x
+    return optimized_tx, optimized_ty, optimized_scale
 
 def aulto_align(
     adata,
@@ -190,11 +222,9 @@ def aulto_align(
 
     # Re-run optimization without outliers
     initial_params = [initial_tx, initial_ty, initial_scale]
-    result = least_squares(residuals, initial_params, args=(filtered_downsample_spatial, detected_HE), bounds=bounds)
+    optimized_tx, optimized_ty, optimized_scale = final_alignment_with_progress(filtered_downsample_spatial, detected_HE, initial_params, bounds)
 
-    # Get the optimized parameters
-    optimized_tx, optimized_ty, optimized_scale = result.x
-    
+    # Get the optimized parameters    
     print("Optimized translation (tx, ty):", optimized_tx, optimized_ty)
     print("Optimized scale:", optimized_scale)
 
