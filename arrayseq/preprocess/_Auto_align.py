@@ -82,7 +82,7 @@ def remove_outliers(data_points, mask_points, threshold=0):
     initial_params = [0, 0, 1]
     n_iterations = 500  # Number of iterations for the progress bar
 
-    with tqdm(total=n_iterations) as pbar:
+    with tqdm(total=n_iterations, desc="Performing Inital Alignment and Removing Outliers") as pbar:
         result = least_squares(
             residuals_with_progress,
             initial_params,
@@ -110,7 +110,7 @@ def residuals_final_with_progress(params, points, mask_points, progress_bar):
 def final_alignment_with_progress(filtered_downsample_spatial, detected_HE, initial_params, bounds):
     n_iterations = 500  # Number of iterations for the progress bar
 
-    with tqdm(total=n_iterations) as pbar:
+    with tqdm(total=n_iterations, desc="Performing Final Alignment") as pbar:
         result = least_squares(
             residuals_final_with_progress,
             initial_params,
